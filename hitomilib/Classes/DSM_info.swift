@@ -4,7 +4,7 @@
 //
 //  Created by 西村祐大 on 2020/04/07.
 //  Copyright © 2020 西村祐大. All rights reserved.
-//
+//  調整中です。
 
 import Foundation
 
