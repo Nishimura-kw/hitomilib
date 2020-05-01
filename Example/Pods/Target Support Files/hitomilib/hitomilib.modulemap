@@ -1,0 +1,6 @@
+framework module hitomilib {
+  umbrella header "hitomilib-umbrella.h"
+
+  export *
+  module * { export * }
+}
