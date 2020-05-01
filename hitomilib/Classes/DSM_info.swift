@@ -8,14 +8,18 @@
 
 import Foundation
 
+private func _releaseSingleton() {
+  DSM_info._sharedDataSingleton = nil
+}
+
 class DSM_info :NSObject{
     
-    private static var _sharedDataSingleton: DSM_info? = nil
+    fileprivate static var _sharedDataSingleton: DSM_info? = nil
 
     public static var sharedDataSingleton: DSM_info {
       if _sharedDataSingleton == nil {
         _sharedDataSingleton = DSM_info()
-        atexit({ _sharedDataSingleton = nil })
+        atexit({ _releaseSingleton = nil })
       }
       return _sharedDataSingleton!
     }
