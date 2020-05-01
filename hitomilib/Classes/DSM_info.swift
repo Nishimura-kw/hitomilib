@@ -8,8 +8,17 @@
 
 import Foundation
 
-class DSM_info {
-    private static let sharedDataSingleton = DSM_info()
+class DSM_info :NSObject{
+    
+    private static var _sharedDataSingleton: DSM_info? = nil
+
+    public static var sharedDataSingleton: DSM_info {
+      if _sharedDataSingleton == nil {
+        _sharedDataSingleton = DSM_info()
+        atexit({ _sharedDataSingleton = nil })
+      }
+      return _sharedDataSingleton!
+    }
     
     /// DSM ステータス
     var volumeLv:Int = 0                         // 音量 レベル
