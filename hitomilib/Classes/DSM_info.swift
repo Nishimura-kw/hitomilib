@@ -7,6 +7,11 @@
 //  調整中です。
 
 import Foundation
+#if os(Linux)
+import Glibc
+#else
+import Darwin
+#endif
 
 private func _releaseSingleton() {
   DSM_info._sharedDataSingleton = nil
@@ -19,7 +24,7 @@ class DSM_info :NSObject{
     public static var sharedDataSingleton: DSM_info {
       if _sharedDataSingleton == nil {
         _sharedDataSingleton = DSM_info()
-        atexit({ _releaseSingleton = nil })
+        atexit(_releaseSingleton)
       }
       return _sharedDataSingleton!
     }
