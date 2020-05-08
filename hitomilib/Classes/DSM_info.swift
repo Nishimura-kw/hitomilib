@@ -49,7 +49,7 @@ import Foundation
     * @param[in] blehelper 送信を実行するサービス
     * @details 命令を送信して、送信した内容をログファイルへ書き込む関数「writeLog(String)」へ 渡す関数
     */
-    public func sendData(_ SendMessage: [Int], blehelper: BluetoothLeService) {
+    public func sendData(SendMessage: [Int], blehelper: BluetoothLeService) {
         var byteArray:[UInt8] = []
         for data in SendMessage {
             let ivBytes = UInt8(data)
@@ -64,7 +64,7 @@ import Foundation
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "yyyy/MM/dd Hms", options: 0, locale: Locale(identifier: "ja_JP"))
         let rialTime = dateFormatter.string(from: date)
-        WriteLog().writeLogFile(_, writeData:" \(rialTime) [tx]：\(dataToSend.withUnsafeBytes {[UInt8](UnsafeBufferPointer(start: $0, count: dataToSend.count))})\n")
+        WriteLog().writeLogFile( writeData:" \(rialTime) [tx]：\(dataToSend.withUnsafeBytes {[UInt8](UnsafeBufferPointer(start: $0, count: dataToSend.count))})\n")
         
         print("送信したもの：\(dataToSend.withUnsafeBytes {[UInt8](UnsafeBufferPointer(start: $0, count: dataToSend.count))})")
         try? blehelper.write(data: dataToSend, characteristicsUUID: UIID_CHARACTERISTIC_TRANSFER_DATA)
@@ -76,7 +76,7 @@ import Foundation
      */
     public func startRequestTimer(_ blehelper: BluetoothLeService) {
         if timerSendRequest?.isValid ?? false{}else{
-            timerSendRequest = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(monitorUpdate(blehelper)), userInfo: nil, repeats: true)
+            timerSendRequest = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(monitorUpdate(blehelper:blehelper)), userInfo: nil, repeats: true)
         }
     }
     
@@ -99,10 +99,10 @@ import Foundation
         // Write three values to one service
         if data48 {
             data48 = false
-            sendData(_, SendMessage: [58,0,0,0,0,0,0,0], blehelper: blehelper)
+            sendData( SendMessage: [58,0,0,0,0,0,0,0], blehelper: blehelper)
         } else {
             data48 = true
-            sendData(_, SendMessage: [59,0,0,0,0,0,0,0], blehelper: blehelper)
+            sendData( SendMessage: [59,0,0,0,0,0,0,0], blehelper: blehelper)
         }
     }
     
@@ -113,7 +113,7 @@ import Foundation
      */
     public func vol_selected(_ vol:Int,blehelper: BluetoothLeService) {
         print("現在の音量は \(vol) ")
-        sendData(_, SendMessage: [60,vol,0,0,0,0,0,0],blehelper: blehelper)
+        sendData( SendMessage: [60,vol,0,0,0,0,0,0],blehelper: blehelper)
     }
     
     /**
@@ -123,7 +123,7 @@ import Foundation
      */
     public func sens_selected(_ sens:Int,blehelper: BluetoothLeService) {
         print("現在の検出感度は \(sens) ")
-        sendData(_, SendMessage: [61,sens,0,0,0,0,0,0],blehelper: blehelper)
+        sendData( SendMessage: [61,sens,0,0,0,0,0,0],blehelper: blehelper)
     }
     
     /**
@@ -140,9 +140,9 @@ import Foundation
         }
         
         if(att_switch_state){
-            sendData(_, SendMessage: [62,1,speed_check,0,0,0,0,0], blehelper: blehelper)
+            sendData( SendMessage: [62,1,speed_check,0,0,0,0,0], blehelper: blehelper)
         }else{
-            sendData(_, SendMessage: [62,0,speed_check,0,0,0,0,0], blehelper: blehelper)
+            sendData( SendMessage: [62,0,speed_check,0,0,0,0,0], blehelper: blehelper)
         }
     }
     
@@ -160,9 +160,9 @@ import Foundation
             att_check = 0
         }
         if vsi_sw_state{
-            sendData(_, SendMessage: [62,att_check,1,0,0,0,0,0], blehelper: blehelper)
+            sendData( SendMessage: [62,att_check,1,0,0,0,0,0], blehelper: blehelper)
         }else{
-            sendData(_, SendMessage: [62,att_check,0,0,0,0,0,0], blehelper: blehelper)
+            sendData( SendMessage: [62,att_check,0,0,0,0,0,0], blehelper: blehelper)
         }
     }
 }
