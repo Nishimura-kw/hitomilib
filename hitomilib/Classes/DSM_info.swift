@@ -7,27 +7,10 @@
 //  調整中です。
 
 import Foundation
-#if os(Linux)
-import Glibc
-#else
-import Darwin
-#endif
 
-private func _releaseSingleton() {
-  DSM_info._sharedDataSingleton = nil
-}
-
-class DSM_info :NSObject{
+public class DSM_info :NSObject{
     
-    fileprivate static var _sharedDataSingleton: DSM_info? = nil
-
-    public static var sharedDataSingleton: DSM_info {
-      if _sharedDataSingleton == nil {
-        _sharedDataSingleton = DSM_info()
-        atexit(_releaseSingleton)
-      }
-      return _sharedDataSingleton!
-    }
+    static var _sharedDataSingleton: DSM_info? = nil
     
     /// DSM ステータス
     var volumeLv:Int = 0                         // 音量 レベル
