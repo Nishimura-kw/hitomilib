@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'hitomilib'
-  s.version          = '0.2.5'
+  s.version          = '0.2.6'
   s.summary          = 'A short description of hitomilib.'
   s.swift_version    = '4.2'
 
