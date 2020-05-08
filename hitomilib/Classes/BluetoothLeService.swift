@@ -25,7 +25,7 @@ public enum BleCentralState: Int {
     case poweredOn
 }
 
-public class BluetoothLeService: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
+@objcMembers public class BluetoothLeService: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     let TAG = "BluetoothLeService"
     
     public var debugMode: Bool = true

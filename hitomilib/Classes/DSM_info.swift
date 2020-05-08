@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class DSM_info :NSObject{
+@objcMembers public class DSM_info :NSObject{
     
     static let sharedDataSingleton = DSM_info()
     
@@ -33,11 +33,13 @@ public class DSM_info :NSObject{
     let UIID_GATT_CHARACTERISTIC = ["FEC26EC4-6D71-4442-9F81-55BC21D658D6"]
     let UIID_CHARACTERISTIC_TRANSFER_DATA = "FEC26EC4-6D71-4442-9F81-55BC21D658D6"
     
+    var timerSendRequest: Timer?
+    
     /**
     * @brief DSM_infoへ値を保存する関数
     * @return DSM_info セットするクラス
     */
-    public class func setObject() -> DSM_info{
+    @objcMembers public class func setObject() -> DSM_info{
         return DSM_info.sharedDataSingleton
     }
     
@@ -47,7 +49,7 @@ public class DSM_info :NSObject{
     * @param[in] blehelper 送信を実行するサービス
     * @details 命令を送信して、送信した内容をログファイルへ書き込む関数「writeLog(String)」へ 渡す関数
     */
-    public func sendData(SendMessage: [Int], blehelper: BluetoothLeService) {
+    public func sendData(_ SendMessage: [Int], blehelper: BluetoothLeService) {
         var byteArray:[UInt8] = []
         for data in SendMessage {
             let ivBytes = UInt8(data)
@@ -69,11 +71,47 @@ public class DSM_info :NSObject{
     }
     
     /**
+     * @brief 一定間隔で交互に命令を送信する関数を実行するタイマー を開始する処理
+     * @param[in] blehelper 送信を実行するサービス
+     */
+    public func startRequestTimer(_ blehelper: BluetoothLeService) {
+        if timerSendRequest?.isValid ?? false{}else{
+            timerSendRequest = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(StartViewController.monitorUpdate(blehelper)), userInfo: nil, repeats: true)
+        }
+    }
+    
+    /**
+     * @brief 一定間隔で交互に命令を送信する関数を実行するタイマー を停止する処理
+     */
+    public func stopRequestTimer(){
+        if timerSendRequest != nil && timerSendRequest!.isValid {
+            timerSendRequest!.invalidate()
+        }
+    }
+
+    var data48 = true
+    /**
+     * @brief 一定間隔で交互に命令を送信する関数
+     * @param[in] blehelper 送信を実行するサービス
+     * @details DSM自体の情報、DSMが取得した顔のデータを取得するための命令を送信する
+     */
+    @objc func monitorUpdate(_ blehelper: BluetoothLeService) {
+        // Write three values to one service
+        if data48 {
+            data48 = false
+            dsmInfo.sendData(SendMessage: [58,0,0,0,0,0,0,0], blehelper: bleHelper)
+        } else {
+            data48 = true
+            dsmInfo.sendData(SendMessage: [59,0,0,0,0,0,0,0], blehelper: bleHelper)
+        }
+    }
+    
+    /**
      * @brief 音量を送信する際に実行する関数
      * @param[in] volume 音量
      * @param[in] blehelper 送信を実行するサービス
      */
-    public func vol_selected(vol:Int,blehelper: BluetoothLeService) {
+    public func vol_selected(_ vol:Int,blehelper: BluetoothLeService) {
         print("現在の音量は \(vol) ")
         sendData(SendMessage: [60,vol,0,0,0,0,0,0],blehelper: blehelper)
     }
@@ -83,7 +121,7 @@ public class DSM_info :NSObject{
      * @param[in] sensitivity 検出感度
      * @param[in] blehelper 送信を実行するサービス
      */
-    public func sens_selected(sens:Int,blehelper: BluetoothLeService) {
+    public func sens_selected(_ sens:Int,blehelper: BluetoothLeService) {
         print("現在の検出感度は \(sens) ")
         sendData(SendMessage: [61,sens,0,0,0,0,0,0],blehelper: blehelper)
     }
@@ -93,7 +131,7 @@ public class DSM_info :NSObject{
      * @param[in] state スイッチの状態
      * @param[in] blehelper 送信を実行するサービス
      */
-    public func att_switch_state_chenge(att_switch_state :Bool,blehelper: BluetoothLeService) {
+    public func att_switch_state_chenge(_ att_switch_state :Bool,blehelper: BluetoothLeService) {
         var speed_check:Int = 0
         if speed_check_on_off {
             speed_check = 1
@@ -114,7 +152,7 @@ public class DSM_info :NSObject{
      * @param[in] blehelper 送信を実行するサービス
      * @details 車速機能スイッチの状態が変更された時、変更されたスイッチの状態を送信している。
      */
-    public func vsi_sw_state_change(vsi_sw_state :Bool,blehelper: BluetoothLeService) {
+    public func vsi_sw_state_change(_ vsi_sw_state :Bool,blehelper: BluetoothLeService) {
         var att_check:Int = 0
         if att_check_on_off {
             att_check = 1
