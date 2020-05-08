@@ -9,9 +9,7 @@
 import Foundation
 
 @objcMembers public class DSM_info :NSObject{
-    
     static let sharedDataSingleton = DSM_info()
-    
     /// DSM ステータス
     public var volumeLv:Int = 0                         // 音量 レベル
     public var sensitivityLv:Int = 0                    // 居眠り運転の検出感度レベル レベル
@@ -35,7 +33,7 @@ import Foundation
     
     var timerSendRequest: Timer?
     
-    var t_blehelper
+    var t_blehelper = BluetoothLeService()
     /**
     * @brief DSM_infoへ値を保存する関数
     * @return DSM_info セットするクラス
