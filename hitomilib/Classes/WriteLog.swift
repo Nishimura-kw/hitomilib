@@ -7,9 +7,10 @@
 //
 
 import Foundation
+
 @objcMembers public class WriteLog :NSObject{
     let saveFileName = "hitomi_Log.txt"
-
+    let documentsPath = NSURL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])
     /**
      * @brief ログファイルのフォルダを作成する関数
      */
