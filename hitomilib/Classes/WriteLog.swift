@@ -14,7 +14,7 @@ public class WriteLog :NSObject{
     * @param[in] writeData 書き込み内容
     * @details アプリのドキュメントフォルダの「SAVEDATA」フォルダ(なければぞ自動生成される)の saveFileName(hitomi_Log.txt)へ書き込む
     */
-    func writeLogFile(writeData:String){
+    public func writeLogFile(writeData:String){
         let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
         let filePath = documentsPath + "/SAVEDATA/" + saveFileName
         print("\(filePath)")

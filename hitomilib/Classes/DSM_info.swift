@@ -73,7 +73,7 @@ public class DSM_info :NSObject{
      * @param[in] volume 音量
      * @param[in] blehelper 送信を実行するサービス
      */
-    func vol_selected(vol:Int,blehelper: BluetoothLeService) {
+    public func vol_selected(vol:Int,blehelper: BluetoothLeService) {
         print("現在の音量は \(vol) ")
         sendData(SendMessage: [60,vol,0,0,0,0,0,0],blehelper: blehelper)
     }
@@ -83,7 +83,7 @@ public class DSM_info :NSObject{
      * @param[in] sensitivity 検出感度
      * @param[in] blehelper 送信を実行するサービス
      */
-    func sens_selected(sens:Int,blehelper: BluetoothLeService) {
+    public func sens_selected(sens:Int,blehelper: BluetoothLeService) {
         print("現在の検出感度は \(sens) ")
         sendData(SendMessage: [61,sens,0,0,0,0,0,0],blehelper: blehelper)
     }
@@ -93,7 +93,7 @@ public class DSM_info :NSObject{
      * @param[in] state スイッチの状態
      * @param[in] blehelper 送信を実行するサービス
      */
-    func att_switch_state_chenge(att_switch_state :Bool,blehelper: BluetoothLeService) {
+    public func att_switch_state_chenge(att_switch_state :Bool,blehelper: BluetoothLeService) {
         var speed_check:Int = 0
         if speed_check_on_off {
             speed_check = 1
@@ -114,7 +114,7 @@ public class DSM_info :NSObject{
      * @param[in] blehelper 送信を実行するサービス
      * @details 車速機能スイッチの状態が変更された時、変更されたスイッチの状態を送信している。
      */
-    func vsi_sw_state_change(vsi_sw_state :Bool,blehelper: BluetoothLeService) {
+    public func vsi_sw_state_change(vsi_sw_state :Bool,blehelper: BluetoothLeService) {
         var att_check:Int = 0
         if att_check_on_off {
             att_check = 1
