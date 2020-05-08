@@ -78,7 +78,7 @@ import Foundation
     public func startRequestTimer(_ blehelper: BluetoothLeService) {
         t_blehelper = blehelper
         if timerSendRequest?.isValid ?? false{}else{
-            timerSendRequest = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(DSM_info.monitorUpdate), userInfo: nil, repeats: true)
+            timerSendRequest = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(monitorUpdate), userInfo: nil, repeats: true)
         }
     }
     
