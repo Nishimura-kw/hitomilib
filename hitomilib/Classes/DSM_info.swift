@@ -35,6 +35,7 @@ import Foundation
     
     var timerSendRequest: Timer?
     
+    var t_blehelper
     /**
     * @brief DSM_infoへ値を保存する関数
     * @return DSM_info セットするクラス
@@ -64,7 +65,7 @@ import Foundation
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "yyyy/MM/dd Hms", options: 0, locale: Locale(identifier: "ja_JP"))
         let rialTime = dateFormatter.string(from: date)
-        WriteLog().writeLogFile( writeData:" \(rialTime) [tx]：\(dataToSend.withUnsafeBytes {[UInt8](UnsafeBufferPointer(start: $0, count: dataToSend.count))})\n")
+        WriteLog().writeLogFile(" \(rialTime) [tx]：\(dataToSend.withUnsafeBytes {[UInt8](UnsafeBufferPointer(start: $0, count: dataToSend.count))})\n")
         
         print("送信したもの：\(dataToSend.withUnsafeBytes {[UInt8](UnsafeBufferPointer(start: $0, count: dataToSend.count))})")
         try? blehelper.write(data: dataToSend, characteristicsUUID: UIID_CHARACTERISTIC_TRANSFER_DATA)
@@ -75,8 +76,9 @@ import Foundation
      * @param[in] blehelper 送信を実行するサービス
      */
     public func startRequestTimer(_ blehelper: BluetoothLeService) {
+        t_blehelper = blehelper
         if timerSendRequest?.isValid ?? false{}else{
-            timerSendRequest = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(monitorUpdate(blehelper:blehelper)), userInfo: nil, repeats: true)
+            timerSendRequest = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(DSM_info.monitorUpdate), userInfo: nil, repeats: true)
         }
     }
     
@@ -95,14 +97,14 @@ import Foundation
      * @param[in] blehelper 送信を実行するサービス
      * @details DSM自体の情報、DSMが取得した顔のデータを取得するための命令を送信する
      */
-    @objc func monitorUpdate(blehelper: BluetoothLeService) {
+    @objc func monitorUpdate() {
         // Write three values to one service
         if data48 {
             data48 = false
-            sendData( SendMessage: [58,0,0,0,0,0,0,0], blehelper: blehelper)
+            sendData( SendMessage: [58,0,0,0,0,0,0,0], blehelper: t_blehelper)
         } else {
             data48 = true
-            sendData( SendMessage: [59,0,0,0,0,0,0,0], blehelper: blehelper)
+            sendData( SendMessage: [59,0,0,0,0,0,0,0], blehelper: t_blehelper)
         }
     }
     
