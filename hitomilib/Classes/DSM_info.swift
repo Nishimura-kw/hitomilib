@@ -10,7 +10,7 @@ import Foundation
 
 public class DSM_info :NSObject{
     
-    static let sharedDataSingleton = DSM_info()
+    static var sharedDataSingleton = DSM_info()
     
     /// DSM ステータス
     var volumeLv:Int = 0                         // 音量 レベル
